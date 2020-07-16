@@ -20,7 +20,7 @@ from sklearn.metrics import roc_curve, auc
 from tabulate import tabulate
 
 from .config import init_logging
-
+import ipdb
 
 class Evaluator:
     def __init__(self, datasets: list, detectors: callable, output_dir: {str} = None, seed: int = None,
