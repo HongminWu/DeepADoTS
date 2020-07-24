@@ -70,7 +70,7 @@ class SyntheticMultivariateDataset(Dataset):
     def get_random_curve(self, length_randomness=10, amplitude_randomness=1):
         is_negative = np.random.choice([True, False])
         sign = -1 if is_negative else 1
-        new_length = self.get_noisy_value(self.mean_curve_length, length_randomness)
+        new_length = int(self.get_noisy_value(self.mean_curve_length, length_randomness))
         new_amplitude = self.get_noisy_value(sign * self.mean_curve_amplitude, amplitude_randomness)
         return self.get_curve(new_length, new_amplitude)
 

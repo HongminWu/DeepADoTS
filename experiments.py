@@ -4,7 +4,7 @@ from itertools import product
 
 from src.datasets import SyntheticDataGenerator, MultivariateAnomalyFunction
 from src.evaluation.evaluator import Evaluator
-
+import ipdb
 
 # Validates all algorithms regarding polluted data based on a given outlier type.
 # The pollution of the training data is tested from 0 to 100% (with default steps=5).
@@ -108,10 +108,11 @@ def get_datasets_for_multiple_runs(anomaly_type, seeds, steps, outlier_type):
 
 def run_experiment_evaluation(detectors, seeds, runs, output_dir, anomaly_type, steps=5, outlier_type='extreme_1',
                               store_results=True):
+    # get synthetic anomaly dataset from agots
     datasets = list(get_datasets_for_multiple_runs(anomaly_type, seeds, steps, outlier_type))
     results = pd.DataFrame()
     evaluator = None
-
+    ipdb.set_trace()
     for index, seed in enumerate(seeds):
         evaluator = Evaluator(datasets[index], detectors, output_dir, seed=seed)
         evaluator.evaluate()

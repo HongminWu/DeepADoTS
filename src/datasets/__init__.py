@@ -1,5 +1,6 @@
 from .dataset import Dataset
 from .kdd_cup import KDDCup
+from .kitting_exp import KittingExp
 from .multivariate_anomaly_function import MultivariateAnomalyFunction
 from .real_datasets import RealDataset, RealPickledDataset
 from .synthetic_data_generator import SyntheticDataGenerator

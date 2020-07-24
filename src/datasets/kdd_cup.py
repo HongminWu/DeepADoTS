@@ -2,7 +2,7 @@ import numpy as np
 import pandas as pd
 
 from .real_datasets import RealDataset
-
+import ipdb
 
 class KDDCup(RealDataset):
     def __init__(self, seed):
@@ -52,5 +52,7 @@ class KDDCup(RealDataset):
         test = np.concatenate((test, normal_data), axis=0)
         test_labels = np.concatenate((test_labels, normal_labels), axis=0)
 
+        ipdb.set_trace()
+        
         return (pd.DataFrame(data=train), pd.DataFrame(data=train_labels)), (
             pd.DataFrame(data=test), pd.DataFrame(data=test_labels))

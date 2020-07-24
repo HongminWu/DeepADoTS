@@ -1,0 +1,42 @@
+import glob
+import os
+import numpy as np
+import pandas as pd
+from src.algorithms import AutoEncoder, DAGMM, RecurrentEBM, LSTMAD, LSTMED
+from src.datasets import KittingExp
+from src.evaluation import Evaluator
+import ipdb
+
+RUNS = 1
+
+def detectors(seed):
+    standard_epochs = 40
+    dets = [AutoEncoder(num_epochs=standard_epochs, seed=seed),
+            DAGMM(num_epochs=standard_epochs, seed=seed, lr=1e-4),
+            DAGMM(num_epochs=standard_epochs, autoencoder_type=DAGMM.AutoEncoder.LSTM, seed=seed),
+            LSTMAD(num_epochs=standard_epochs, seed=seed), LSTMED(num_epochs=standard_epochs, seed=seed),
+            RecurrentEBM(num_epochs=standard_epochs, seed=seed)]
+
+    return sorted(dets, key=lambda x: x.framework)
+
+def evaluate_real_datasets():
+    seeds = np.random.randint(np.iinfo(np.uint32).max, size=RUNS, dtype=np.uint32)
+    results = pd.DataFrame()
+    for seed in seeds:
+        datasets = [KittingExp(seed, skill=5)]
+        evaluator = Evaluator(datasets, detectors, seed=seed)
+        evaluator.evaluate()
+        result = evaluator.benchmarks()
+        evaluator.plot_roc_curves()
+        evaluator.plot_threshold_comparison()
+        evaluator.plot_scores()
+        results = results.append(result, ignore_index=True)
+
+    avg_results = results.groupby(['dataset', 'algorithm'], as_index=False).mean()
+    evaluator.set_benchmark_results(avg_results)
+    evaluator.export_results('run_real_datasets')
+    evaluator.create_boxplots(runs=RUNS, data=results, detectorwise=False)
+    evaluator.create_boxplots(runs=RUNS, data=results, detectorwise=True)
+
+if __name__ == '__main__':
+    evaluate_real_datasets()
