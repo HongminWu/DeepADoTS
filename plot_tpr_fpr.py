@@ -28,6 +28,8 @@ def load_csv(skill = None, ax = None):
     csv = pd.read_csv(csv_path)
     for i in range(csv.shape[0]):
         _name = csv.iloc[i]['algorithm']
+        if _name == "LSTM-AD":
+            _name = 'sLSTM'
         _tpr = csv.iloc[i]['tpr'] # str with \n
         tpr_str = _tpr.replace('\n','') # remove \n 
         tpr = np.fromstring(tpr_str.strip(']['), dtype=float, sep=' ') # str2float
