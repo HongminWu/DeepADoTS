@@ -288,6 +288,30 @@ class Evaluator:
             figures.append(fig)
         return figures
 
+    def save_roc_curves(self, skill=None, tpr_fpr= None):
+        detectors = self.detectors
+        for ds in self.datasets:
+            _, _, _, y_test = ds.data()
+            tpr_fpr = pd.DataFrame()        
+            for det in detectors:
+                score = self.results[(ds.name, det.name)]
+                if np.isnan(score).all():
+                    score = np.zeros_like(score)
+                # Rank NaN below every other value in terms of anomaly score
+                score[np.isnan(score)] = np.nanmin(score) - sys.float_info.epsilon
+                fpr, tpr, _ = roc_curve(y_test, score)              
+                roc_auc = auc(fpr, tpr)
+
+                tpr_fpr = tpr_fpr.append({
+                                'skill':skill,
+                                'dataset': ds.name,
+                                'algorithm': det.name,
+                                'fpr': fpr,
+                                'tpr': tpr,
+                                'auroc': roc_auc},
+                               ignore_index=True)
+            tpr_fpr.to_csv('tpr_fpr_skill_%s.csv'%skill, index=False)                               
+
     def plot_auroc(self, store=True, title='AUROC'):
         plt.close('all')
         self.benchmark_results[['dataset', 'algorithm', 'auroc']].pivot(

@@ -5,9 +5,9 @@ from .real_datasets import RealDataset
 import ipdb
 
 class KittingExp(RealDataset):
-    def __init__(self, seed, skill):
+    def __init__(self, seed, folder_name, skill):
         super().__init__(
-            name="Kitting Experiment", raw_path='none', file_name='kitting_exp_skill_%s.npz'%skill
+            name="Kitting Experiment", raw_path='none', file_name='%s_kitting_exp_skill_%s.npz'%(folder_name, skill)
         )
         self.seed = seed
 
@@ -51,7 +51,7 @@ class KittingExp(RealDataset):
         print
         print("shape of normal_data:{}, shape of anomaly_data:{}".format(normal_data.shape, anomaly_data.shape))
         print
-        input("press Enter to continue!")
+        # input("press Enter to continue!")
         return (pd.DataFrame(data=train), pd.DataFrame(data=train_labels)), (
             pd.DataFrame(data=test), pd.DataFrame(data=test_labels))
     
